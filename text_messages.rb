@@ -1,6 +1,7 @@
 module TextMessages
     require 'rubygems'
     require 'twilio-ruby'
+    require './super_secret_passwords.rb'
     ACCOUNT_SID = "[SID]"
     AUTH_TOKEN = "[TOKEN]"
     CLIENT = Twilio::REST::Client.new(ACCOUNT_SID, AUTH_TOKEN)
