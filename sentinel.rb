@@ -2,21 +2,24 @@ class Sentinel
     require 'rubygems'
     require 'net/ssh'
     require './text_messages.rb'
+    require './super_secret_passwords.rb'
 
-    def initialize(hostname, user, command)
+    def initialize(hostname, user, password, command)
         @hostname = hostname
         @user = user
+        @password = password
         @command = command
     end
 
     def connect_and_execute
         begin
             puts "trying to connect to #{@hostname}"
-            ssh = Net::SSH.start(@hostname, @user)
+            ssh = Net::SSH.start(@hostname, @user, :password => @password)
             res = ssh.exec!(@command)
             ssh.close
             @@stdout = res.to_s
-        rescue "Unable to Connect!"
+        rescue 
+            "Unable to Connect!"
         end
     end
 
@@ -51,7 +54,7 @@ class Sentinel
     end    
 end
 
-Sentinel.new("[IP_ADDRESS]", "joe", "df -h").connect_and_execute
+Sentinel.new(Secrets.host, Secrets.user, Secrets.password, "df -h").connect_and_execute
 Sentinel.parse_stdout
-Sentinel.analyze_drive(20)
+Sentinel.analyze_drive(0)
 Sentinel.send_text
