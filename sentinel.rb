@@ -24,14 +24,15 @@ class Sentinel
     end
 
     def self.parse_stdout
-        data_long = @@stdout.split("\n")
-        data_rows = data_long.drop(1)
+        data_long = @@stdout.split("\n")                                # Split on line break
+        data_rows = data_long.drop(1)                                   
         data_one = data_rows.map { |data_rows| data_rows.split(' ') }
         @data = []
         for drive in data_one
-            drive[4].gsub!(/[!@%&"]/,'')
+            drive[4].gsub!(/[!@#$%^&*'"]/,'')
             @data << drive
         end
+        print data_rows
     end
 
     def self.analyze_drive(threshold)
@@ -56,5 +57,5 @@ end
 
 Sentinel.new(Secrets.host, Secrets.user, Secrets.password, "df -h").connect_and_execute
 Sentinel.parse_stdout
-Sentinel.analyze_drive(0)
+Sentinel.analyze_drive(12)
 Sentinel.send_text
